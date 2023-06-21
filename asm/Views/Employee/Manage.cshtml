@@ -1,0 +1,271 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = "_LayOutAd";
+    Pagination pagination = new Pagination();
+    int pageNo = 0;
+    if(ViewBag.Pagination != null)
+    {
+        pagination = ViewBag.Pagination;
+        pageNo = pagination.CurrentPage; 
+    }
+}
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model IEnumerable<asm.Models.FoodItem>
+<div class="page-wrapper">
+    <!-- ============================================================== -->
+    <!-- Bread crumb and right sidebar toggle -->
+    <!-- ============================================================== -->
+    <div class="page-breadcrumb">
+        <div class="row align-items-center">
+            <div class="col-5">
+                <h4 class="page-title">Dashboard</h4>
+                <div class="d-flex align-items-center">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="#">Home</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Library</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Bread crumb and right sidebar toggle -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- Container fluid  -->
+    <!-- ============================================================== -->
+
+    <div class="container-fluid">
+        <!-- ============================================================== -->
+        <!-- Start Page Content -->
+        <!-- ============================================================== -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="card-title m-t-40">
+                            <i class="m-r-5 font-18 mdi mdi-numeric-1-box-multiple-outline"></i> DANH SÁCH MÓN ĂN
+                        </h3>
+                        <div class="table-responsive">
+                            <a asp-action="Create" asp-controller="Food">Thêm món</a>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">ID</th>
+                                        <th scope="col">Hình ảnh</th>
+                                        <th scope="col">Tên món</th>
+                                        <th scope="col">Giá</th>
+                                        <th scope="col" style="width:130px;">Phân loại</th>
+                                        <th scope="col">Trạng thái</th>
+                                        <th></th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach(FoodItem item in Model)
+                                    {
+                                        <tr>
+                                            <td class="active">@item.FoodId</td>
+                                            <td>
+                                                <img class="flex-shrink-0 img-fluid rounded" src="~/img/MenuFood/@item.Img" alt=""
+                                                     style="width: 100px; height:100px;">
+                                            </td>
+                                            <td>@item.FoodName</td>
+                                            <td>@item.Price</td>
+                                            @if(item.KindFood == TypeFood.WaterDish)
+                                            {
+                                                <td>Nước</td>
+                                            }else if(item.KindFood == TypeFood.Combo)
+                                            {
+                                                <td>Combo</td>
+                                            }else{
+                                                <td>Món</td>
+                                            }
+                                            @if (item.Status == true)
+                                            {
+                                                <td>Hoạt động</td>
+                                            }else{
+                                                <td>Ngừng hoạt động</td>
+                                            }
+                                            <td>  <a asp-action="Edit" asp-controller="Food" asp-route-Id="@item.FoodId">Update</a></td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>   
+                        <div class="Container">
+                            @if(pagination.StartPage > 0)
+                            {
+                                <ul class="pagination justify-content-end">
+                                    @if (pagination.CurrentPage < pagination.TotalPage)
+                                    {
+                                        <li class="page-item">
+                                            <a class="page-link" asp-action="Manage" asp-controller="Employee" asp-route-pg="@(pagination.CurrentPage - 1)" onclick="updateCurrentPage(@(pagination.CurrentPage - 1));">
+                                                Trang Sau
+                                            </a>
+                                        </li>
+                                        <li class="page-item">
+                                            <span id="current-page">@pagination.CurrentPage</span>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link" asp-action="Manage" asp-controller="Employee" asp-route-pg="@(pagination.CurrentPage + 1)" onclick="updateCurrentPage(@(pagination.CurrentPage + 1));">
+                                                Trang Kế
+                                            </a>
+                                        </li>
+                                    }
+
+                                </ul>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--List Customer-->
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="card-title">
+                            <i class="m-r-5 font-18 mdi mdi-numeric-2-box-multiple-outline"></i> DANH SÁCH KHÁCH HÀNG
+                        </h3>
+                        <div class="table-responsive">
+                            <a asp-action="Create" asp-controller="Food">Thêm món</a>
+                            <table class="table">                                               
+                                <thead>
+                                    <tr>
+                                        <th scope="col">ID</th>
+                                        <th scope="col">Hình ảnh</th>
+                                        <th scope="col">Tên món</th>
+                                        <th scope="col">Giá</th>
+                                        <th scope="col" style="width:130px;">Phân loại</th>
+                                        <th scope="col">Mô tả</th>
+                                        <th scope="col">Trạng thái</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (FoodItem item in Model)
+                                    {
+                                        <tr>
+                                            <td>@item.FoodId</td>
+                                            <td>
+                                                <img class="flex-shrink-0 img-fluid rounded" src="~/img/MenuFood/@item.Img" alt=""
+                                                     style="width: 100px; height:100px;">
+                                            </td>
+                                            <td>@item.FoodName</td>
+                                            <td>@item.Price</td>
+                                            @if (item.KindFood == TypeFood.WaterDish)
+                                            {
+                                                <td>Nước</td>
+                                            }
+                                            else if (item.KindFood == TypeFood.Combo)
+                                            {
+                                                <td>Combo</td>
+                                            }
+                                            else
+                                            {
+                                                <td>Món</td>
+                                            }
+                                            <td>@item.Description</td>
+                                            @if (item.Status == true)
+                                            {
+                                                <td>Hoạt động</td>
+                                            }
+                                            else
+                                            {
+                                                <td>Ngừng hoạt động</td>
+                                            }
+
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--List Employee-->
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="card-title">
+                            <i class="m-r-5 font-18 mdi mdi-numeric-3-box-multiple-outline"></i> DANH SÁCH NHÂN VIÊN
+                        </h3>
+                        <div class="table-responsive">
+                            <a asp-action="Create" asp-controller="Food">Thêm món</a>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">ID</th>
+                                        <th scope="col">Hình ảnh</th>
+                                        <th scope="col">Tên món</th>
+                                        <th scope="col">Giá</th>
+                                        <th scope="col" style="width:130px;">Phân loại</th>
+                                        <th scope="col">Mô tả</th>
+                                        <th scope="col">Trạng thái</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (FoodItem item in Model)
+                                    {
+                                        <tr>
+                                            <td>@item.FoodId</td>
+                                            <td>
+                                                <img class="flex-shrink-0 img-fluid rounded" src="~/img/MenuFood/@item.Img" alt=""
+                                                     style="width: 100px; height:100px;">
+                                            </td>
+                                            <td>@item.FoodName</td>
+                                            <td>@item.Price</td>
+                                            @if (item.KindFood == TypeFood.WaterDish)
+                                            {
+                                                <td>Nước</td>
+                                            }
+                                            else if (item.KindFood == TypeFood.Combo)
+                                            {
+                                                <td>Combo</td>
+                                            }
+                                            else
+                                            {
+                                                <td>Món</td>
+                                            }
+                                            <td>@item.Description</td>
+                                            @if (item.Status == true)
+                                            {
+                                                <td>Hoạt động</td>
+                                            }
+                                            else
+                                            {
+                                                <td>Ngừng hoạt động</td>
+                                            }
+
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ============================================================== -->
+        <!-- End PAge Content -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Right sidebar -->
+        <!-- ============================================================== -->
+        <!-- .right-sidebar -->
+        <!-- ============================================================== -->
+        <!-- End Right sidebar -->
+        <!-- ============================================================== -->
+    </div>
+</div>
+<script>
+    function updateCurrentPage(page) {
+        document.getElementById("current-page").innerText = page;
+    }
+</script>

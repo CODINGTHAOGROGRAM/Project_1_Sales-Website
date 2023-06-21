@@ -1,0 +1,165 @@
+﻿@using Newtonsoft.Json;
+@using asm.ViewModels;
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model IEnumerable<asm.ViewModels.ViewCart>
+<div class="container-fluid bg-white p-0">
+    <!-- Navbar & Hero Start -->
+    <div class="container-fluid position-relative p-0">
+        <div class="container-fluid py-5 bg-dark hero-header mb-5">
+            <div class="container text-center my-5 pt-5 pb-4">
+                <h1 class="display-3 text-white mb-3 animated slideInDown">Giỏ hàng</h1>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb justify-content-center text-uppercase">
+                        <li class="breadcrumb-item text-white active " aria-current="page">Trang chủ</li>
+                        <li class="breadcrumb-item "><a href="#">Giỏ hàng</a></li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <!-- Navbar & Hero End -->
+    @if (Model.Count() > 0)
+    {
+        <div class="container-xxl py-5">
+
+            <table class="table text-center">
+                <tr>
+                    <th>STT</th>
+                    <th>Title</th>
+                    <th>Image</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Total</th>
+                    <th></th>
+                </tr>
+                @{
+                    int stt = 0;
+                    double total = 0;
+                    foreach (var item in Model)
+                    {
+                        int Id = item.FoodItem.FoodId;
+                        string txt_Id = "txtQuantity_" + Id;
+                        stt++;
+                        double totalSub = (double)item.FoodItem.Price * item.Quantity;
+                        total += totalSub;
+                        <tr id="tr_@Id" class="align-middle">
+                            <td>@stt</td>
+                            <td>@item.FoodItem.FoodName</td>
+                            <td>       
+                                <img src="~/img/MenuFood/@item.FoodItem.Img" style="width:150px;" />
+                            </td>
+                            <td>
+                                <input type="number" id="@txt_Id" value="@item.Quantity" min="1" step="1" onchange="updateCart(@Id)" style="border:none; text-align:center;" />
+                                
+                            </td>
+                            <td id="tdPrice_@Id">@item.FoodItem.Price</td>
+                            <td id="tdTotal_@Id">@totalSub</td>
+                            <td>
+                                <a href="javascript:delCart(@Id)">Delete</a>
+                            </td>
+                        </tr>
+                    }
+                }
+            </table>
+            <a class="btn btn-primary py-2 px-4 float-end" style="width:300px; border-radius: 15px; ">Total: &ensp; <span id="spTotal">@total</span></a>
+        </div>
+        <hr />
+        <a id="paypal" class="btn btn-primary py-2 px-4 float-end " href="javascript:orderByPaypal();">Paypal</a>
+    }
+    else
+    {
+        <div class="container-xxl py-5">
+            <div class="service d-flex align-items-center" style=" background-color:#E6E6E6;">
+                <div class="row">
+                    <div class="col-4 align-middle" style="">
+                        <div style="padding-top: 200px; padding-left: 20px;">
+                            <h2>
+                                GIỎ HÀNG CỦA BẠN ĐANG TRỐNG.HÃY ĐẶT MÓN NGAY!
+                            </h2>
+                            <a class="btn btn-primary py-2 px-4" asp-controller="Food" asp-action="Menu">Bắt đầu đặt hàng</a>
+                        </div>
+                    </div>
+                    <div class="col-8">
+                        <img src="~/img/buy-a-food-cart.JPG" style="width:100%;" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+</div>
+<script>
+    function updateCart(id) {
+        var _quantity = $("#txtQuantity_" + id).val();
+        var _price = $("#tdPrice_" + id).html();
+        var _totalPrice = _quantity * _price;
+        $("#tdTotal_" + id).html(_totalPrice);
+
+        $.ajax({
+            type: "POST",
+            url: "/Food/UpdateCart",
+            data: {
+                id: id,
+                Quantity: _quantity
+            },
+            success: function (result) {
+                $("#spTotal").html(result);
+                if (result == "0") {
+                    $("#imgCart").attr("src", '~/images/cart.png');
+                }
+            }
+        });
+    }
+    function delCart(id){
+        $.ajax({
+            type:"POST",
+            url: "/Food/DeleteCart",
+            data:{
+                id: id
+            },
+            success: function (result) {
+                $("#tr_" + id).hide();
+                $("#spTotal").html(result);
+                if (result == "0") {
+                    $("#imgCart").attr("src", '~/images/cart.png');
+                }
+            }
+           
+        });
+    }
+
+    function orderByPaypal() {
+        $.get('/Food/CreatePaymentUrl', function (result) {
+            var redirectUrl = result; // Nhận dữ liệu từ Action Method
+            var firstFiveChars = String(redirectUrl).substring(0, 4);
+            if (firstFiveChars === "http") {
+                window.location.href = redirectUrl;
+            } else {
+                swal("Infomation", result.message, "error");
+            }
+            // Sử dụng dữ liệu trong JavaScript
+        });
+    }
+
+    //function orderCart(flagLogin) {
+    //    if (!flagLogin) {
+    //        alert("Bạn cần đăng nhập để đặt hàng.");
+    //        return false;
+    //    }
+
+    //    $.ajax({
+    //        type: "POST",
+    //        url: "/Home/OrderCart",
+    //        data: {
+    //        },
+    //        success: function (result) {
+    //            window.location = "/Home/History";
+    //        }
+    //    });
+    //}
+
+</script>

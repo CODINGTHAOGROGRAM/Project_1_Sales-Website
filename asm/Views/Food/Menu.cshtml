@@ -1,0 +1,424 @@
+﻿@model IEnumerable<asm.Models.FoodItem>
+@{
+    Pagination pagination = new Pagination();
+    int pageNo = 0;
+    if (ViewBag.Pagination != null)
+    {
+        pagination = ViewBag.Pagination;
+        pageNo = pagination.CurrentPage;
+    }
+ 
+}
+<div class="container-fluid bg-white p-0">
+    <!-- Navbar & Hero Start -->
+    <div class="container-fluid position-relative p-0">
+        <div class="container-fluid py-5 bg-dark hero-header mb-5">
+            <div class="container text-center my-5 pt-5 pb-4">
+                <h1 class="display-3 text-white mb-3 animated slideInDown">THỰC ĐƠN MÓN ĂN</h1>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb justify-content-center text-uppercase">
+                        <li class="breadcrumb-item text-white active " aria-current="page">Trang chủ</li>
+                        <li class="breadcrumb-item "><a href="#">Thực đơn</a></li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <!-- Navbar & Hero End -->
+    <!-- Menu Start -->
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+                <h5 class="section-title ff-secondary text-center text-primary fw-normal">Food Menu</h5>
+                <h1 class="mb-5">Most Popular Items</h1>
+            </div>
+            <div class="tab-class text-center wow fadeInUp" data-wow-delay="0.1s">
+                <ul class="nav nav-pills d-inline-flex justify-content-center border-bottom mb-5">
+                    <li class="nav-item">
+                        <a class="d-flex align-items-center text-start mx-3 ms-0 pb-3 active" data-bs-toggle="pill"
+                           href="#tab-1">
+                            <i class="fa fa-coffee fa-2x text-primary"></i>
+                            <div class="ps-3">
+                                <small class="text-body">Phổ biến</small>
+                                <h6 class="mt-n1 mb-0">Tất cả</h6>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="d-flex align-items-center text-start mx-3 ms-0 pb-3" data-bs-toggle="pill"
+                           href="#tab-2">
+                            <i class="fa fa-coffee fa-2x text-primary"></i>
+                            <div class="ps-3">
+                                <small class="text-body">Popular</small>
+                                <h6 class="mt-n1 mb-0">Combo</h6>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="d-flex align-items-center text-start mx-3 pb-3" data-bs-toggle="pill"
+                           href="#tab-3">
+                            <i class="fa fa-hamburger fa-2x text-primary"></i>
+                            <div class="ps-3">
+                                <small class="text-body">Special</small>
+                                <h6 class="mt-n1 mb-0">Thức uống</h6>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="d-flex align-items-center text-start mx-3 me-0 pb-3" data-bs-toggle="pill"
+                           href="#tab-4">
+                            <i class="fa fa-utensils fa-2x text-primary"></i>
+                            <div class="ps-3">
+                                <small class="text-body">Lovely</small>
+                                <h6 class="mt-n1 mb-0">Thức ăn nhanh</h6>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div id="tab-1" class="tab-pane fade show p-0 active">
+                        <div class="row g-4">
+                            @foreach (FoodItem item in Model.Where(x => x.Status == true))
+                            {
+                                <div class="col-lg-6">
+                                    <div class="service rounded pt-3">
+                                        <div asp-route-id="@item.FoodId" asp-controller="Food" asp-action="Details" class=" service-item d-flex align-items-center" style="height:157px; padding:12px; box-shadow:0 0 45px rgba(0, 0, 0, .08);">
+                                            <img data-food-id="@item.FoodId" data-bs-toggle="modal" data-bs-target="#modalFood1" class=" details flex-shrink-0 img-fluid rounded" src="~/img/MenuFood/@item.Img" alt=""
+                                                 style="width: 100px; height:100px;">
+                                            <div class="w-100 d-flex flex-column text-start ps-4">
+                                                <h5 class="d-flex justify-content-between border-bottom pb-2">
+                                                    <span>@item.FoodName</span>
+                                                    <span class="text-primary">@item.Price Đ</span>
+                                                </h5>
+                                                <small class="fst-italic">
+                                                    @item.Description
+                                                </small>
+                                                <h6 class="d-flex justify-content-end pb-2">
+                                                    <a href="javascript:addCart(@item.FoodId)" class="text-primary" style="margin-top: 2px;">
+                                                        Thêm vào giỏ
+                                                        <img id="imgBusy_@item.FoodId" style="display:none;" />
+                                                        
+                                                    </a>
+                                                </h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Modal Details-->
+                                <div class="modal fade " id="modalFood1" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered modal-lg" > 
+                                        <div class="modal-content" style="width:800px; min-height:486px;">
+                                            <div class="modal-header" style="background-color:var(--dark) !important;">
+                                                <a href="" class="navbar-brand p-0">
+                                                    <h1 class="text-primary m-0"><i class="fa fa-utensils me-3"></i>TH FOODS</h1>
+                                                    <!-- <img src="img/logo.png" alt="Logo"> -->
+                                                </a>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body row food-details" id="food-details">
+                                                   <!--Show view Details-->
+                                            </div>
+                                            <div class="modal-footer">
+                                                <h6 class="d-flex justify-content-end pb-2">
+                                                    <a href="javascript:addCart(@item.FoodId)" class="text-primary" style="margin-top: 2px;">Thêm vào giỏ
+                                                        <img id="imgBusy_@item.FoodId" style="display:none;"/>
+                                                    </a>
+                                                </h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--Model Details end-->
+                            }
+                           
+
+                        </div>
+                        <br>
+                        <div class="container">
+                           @if (ViewBag.Pagination.TotalPage > 1)
+                            {
+                                <ul class="pagination justify-content-end">
+                                    <li class="page-item @(ViewBag.Pagination.CurrentPage == 1  ? "active" : "")">
+                                        <a class="page-link" asp-controller="Food" asp-action="Menu" asp-route-pg="1">1</a>
+                                    </li>
+                                    @if (ViewBag.Pagination.TotalPage > 2)
+                                    {
+                                        @for (int page = 2; page <= ViewBag.Pagination.TotalPage - 1; page++)
+                                        {
+                                             var pg = page;
+                                            <li class="page-item @(ViewBag.Pagination.CurrentPage == page ? "active" : "")">
+                                                <a class="page-link" asp-controller="Food" asp-action="Menu" asp-route-pg="@pg"> @pg </a>
+                                            </li>
+                                        }
+                                    }
+                                    @if (ViewBag.Pagination.TotalPage > 1)
+                                    {
+                                        <li class="page-item @(ViewBag.Pagination.CurrentPage == ViewBag.Pagination.TotalPage ? "active" : "")">
+                                            <a class="page-link" asp-controller="Food" asp-action="Menu" asp-route-pg="@ViewBag.Pagination.TotalPage">@ViewBag.Pagination.TotalPage</a>
+                                        </li>
+                                    }
+                                </ul>
+                            }
+
+                        </div>
+                    </div>
+                    <div id="tab-2" class="tab-pane fade show p-0">
+                        <div class="row g-4">
+                            @foreach (FoodItem item in Model.Where(x => x.Status == true &&  x.KindFood == TypeFood.Combo))
+                            {
+                                <div class="col-lg-6">
+                                    <div class="service rounded pt-3">
+                                        <div data-food-id="@item.FoodId" asp-route-id="@item.FoodId" asp-controller="Food" asp-action="Details" data-bs-toggle="modal" data-bs-target="#modalFood2" class="details service-item d-flex align-items-center" style="height:157px; padding:12px; box-shadow:0 0 45px rgba(0, 0, 0, .08);">
+                                            <img class="flex-shrink-0 img-fluid rounded" src="~/img/MenuFood/@item.Img" alt=""
+                                                 style="width: 100px; height:100px;">
+                                            <div class="w-100 d-flex flex-column text-start ps-4">
+                                                <h5 class="d-flex justify-content-between border-bottom pb-2">
+                                                    <span>@item.FoodName</span>
+                                                    <span class="text-primary">@item.Price Đ</span>
+                                                </h5>
+                                                <small class="fst-italic">
+                                                    @item.Description
+                                                </small>
+                                                <h6 class="d-flex justify-content-end pb-2">
+                                                    <a href="javascript:addCart(@item.FoodId)" class="text-primary" style="margin-top: 2px;">
+                                                        Thêm vào giỏ
+                                                        <img id="imgBusy_@item.FoodId" style="display:none;" />
+                                                    </a>
+                                                </h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Modal Details-->
+                                <div class="modal fade " id="modalFood2" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered modal-lg">
+                                        <div class="modal-content" style="width:800px;height:486px;">
+                                            <div class="modal-header" style="background-color:var(--dark) !important;">
+                                                <a href="" class="navbar-brand p-0">
+                                                    <h1 class="text-primary m-0"><i class="fa fa-utensils me-3"></i>TH FOODS</h1>
+                                                    <!-- <img src="img/logo.png" alt="Logo"> -->
+                                                </a>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body row food-details" id="food-details">
+
+                                                <!--Show view Details-->
+
+                                            </div>
+                                            <div class="modal-footer">
+                                                <h6 class="d-flex justify-content-end pb-2">
+                                                    <a href="javascript:addCart(@item.FoodId)" class="text-primary" style="margin-top: 2px;">
+                                                        Thêm vào giỏ
+                                                        <img id="imgBusy_@item.FoodId" style="display:none;" />
+                                                    </a>
+                                                </h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--Model Details end-->
+                            }
+                        </div>
+                    </div>
+                    <div id="tab-3" class="tab-pane fade show p-0">
+                        <div class="row g-4">
+                            @foreach (FoodItem item in Model.Where(f => f.KindFood == TypeFood.WaterDish && f.Status == true))
+                            {
+                                <div class="col-lg-6">
+                                    <div class="service rounded pt-3">
+                                        <div data-food-id="@item.FoodId" asp-route-id="@item.FoodId" asp-controller="Food" asp-action="Details" data-bs-toggle="modal" data-bs-target="#modalFood3" class="details service-item d-flex align-items-center" style="height:157px; padding:12px; box-shadow:0 0 45px rgba(0, 0, 0, .08);">
+                                            <img class="flex-shrink-0 img-fluid rounded" src="~/img/MenuFood/@item.Img" alt=""
+                                                 style="width: 100px; height:100px;">
+                                            <div class="w-100 d-flex flex-column text-start ps-4">
+                                                <h5 class="d-flex justify-content-between border-bottom pb-2">
+                                                    <span>@item.FoodName</span>
+                                                    <span class="text-primary">@item.Price Đ</span>
+                                                </h5>
+                                                <small class="fst-italic">
+                                                    @item.Description
+                                                </small>
+                                                <h6 class="d-flex justify-content-end pb-2">
+                                                    <a href="javascript:addCart(@item.FoodId)" class="text-primary" style="margin-top: 2px;">
+                                                        Thêm vào giỏ
+                                                        <img id="imgBusy_@item.FoodId" style="display:none;" />
+                                                    </a>
+                                                </h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Modal Details-->
+                                <div class="modal fade " id="modalFood3" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered modal-lg">
+                                        <div class="modal-content" style="width:800px;height:486px;">
+                                            <div class="modal-header" style="background-color:var(--dark) !important;">
+                                                <a href="" class="navbar-brand p-0">
+                                                    <h1 class="text-primary m-0"><i class="fa fa-utensils me-3"></i>TH FOODS</h1>
+                                                    <!-- <img src="img/logo.png" alt="Logo"> -->
+                                                </a>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body row food-details" id="food-details">
+
+                                                <!--Show view Details-->
+
+                                            </div>
+                                            <div class="modal-footer">
+                                                <h6 class="d-flex justify-content-end pb-2">
+                                                    <a href="javascript:addCart(@item.FoodId)" class="text-primary" style="margin-top: 2px;">
+                                                        Thêm vào giỏ
+                                                        <img id="imgBusy_@item.FoodId" style="display:none;" />
+                                                    </a>
+                                                </h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--Model Details end-->
+                            }
+                        </div>
+                    </div>
+                    <div id="tab-4" class="tab-pane fade show p-0">
+                        <div class="row g-4">
+                            @foreach (FoodItem item in Model.Where(f => f.KindFood == TypeFood.Dish && f.Status == true))
+                            {
+                                <div class="col-lg-6">
+                                    <div class="service rounded pt-3">
+                                        <div id="details4" data-food-id="@item.FoodId" asp-route-id="@item.FoodId" asp-controller="Food" asp-action="Details" data-bs-toggle="modal" data-bs-target="#modalFood4" class="details service-item d-flex align-items-center" style="height:157px; padding:12px; box-shadow:0 0 45px rgba(0, 0, 0, .08);">
+                                            <img class="flex-shrink-0 img-fluid rounded" src="~/img/MenuFood/@item.Img" alt=""
+                                                 style="width: 100px; height:100px;">
+                                            <div class="w-100 d-flex flex-column text-start ps-4">
+                                                <h5 class="d-flex justify-content-between border-bottom pb-2">
+                                                    <span>@item.FoodName</span>
+                                                    <span class="text-primary">@item.Price Đ</span>
+                                                </h5>
+                                                <small class="fst-italic">
+                                                    @item.Description
+                                                </small>
+                                                <h6 class="d-flex justify-content-end pb-2">
+                                                    <a href="javascript:addCart(@item.FoodId)" class="text-primary" style="margin-top: 2px;">
+                                                        Thêm vào giỏ
+                                                        <img id="imgBusy_@item.FoodId" style="display:none;" />
+                                                    </a>
+                                                </h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Modal Details-->
+                                <div class="modal fade " id="modalFood4" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered modal-lg">
+                                        <div class="modal-content" style="width:800px;height:486px;">
+                                            <div class="modal-header" style="background-color:var(--dark) !important;">
+                                                <a href="" class="navbar-brand p-0">
+                                                    <h1 class="text-primary m-0"><i class="fa fa-utensils me-3"></i>TH FOODS</h1>
+                                                    <!-- <img src="img/logo.png" alt="Logo"> -->
+                                                </a>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body row food-details" id="food-details">
+
+                                                <!--Show view Details-->
+
+                                            </div>
+                                            <div class="modal-footer">
+                                                <h6 class="d-flex justify-content-end pb-2">
+                                                    <a href="javascript:addCart(@item.FoodId)" class="text-primary" style="margin-top: 2px;">
+                                                        Thêm vào giỏ
+                                                        <img id="imgBusy_@item.FoodId" style="display:none;" />
+                                                    </a>
+                                                </h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--Model Details end-->
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Menu End -->
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+</div>
+<!--ajax-->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(function () {
+        $('.details').click(function () {
+            var foodId = $(this).data('food-id');
+            var detailsContainer = $('#food-details');
+
+            // Gửi yêu cầu Ajax đến hành động Details trong FoodController
+            $.ajax({
+                url: '@Url.Action("Details", "Food")',
+                data: { id: foodId },
+                success: function (data) {
+                    // Cập nhật nội dung chi tiết món ăn
+                    detailsContainer.html(data);
+                }
+            });
+        });
+    });
+    @*Add to cart*@
+        function addCart(id) {
+            $("#imgBusy_" + id).show();
+            setTimeout(function () {
+                $.ajax({
+                    url: "/Food/AddCart?Id=" + id,
+                    type: "Post",
+                    success: function (resault) {
+                      @*  var cartItemCount = parseInt($("#cartItemCount").text());
+                        $("#cartItemCount").text(cartItemCount + 1);*@
+                              var cartItemCount = resault.cartCount;
+                        $("#cartItemCount").text(cartItemCount);
+                    }
+                    @*,
+                    error: function (e) {
+                        alert(this.url);
+                    }*@
+                });
+                $("#imgBusy_" + id).hide();
+            }, 500);
+        }
+
+
+
+
+
+    @*Chuyen tap // active effect button*@
+       @* $(document).ready(function () {
+            $('.pagination .page-link').each(function () {
+                if ($(this).text().trim() === '@pagination.CurrentPage.ToString()') {
+                    $(this).parent().addClass('active');
+                }
+            });
+        });*@
+       @* $(document).ready(function () {
+            var currentPage = @pagination.CurrentPage;
+
+            $('.pagination a').each(function () {
+                var page = parseInt($(this).text());
+
+                if (page === currentPage) {
+                    $(this).parent().addClass('active');
+                }
+            });
+        });*@
+
+</script>
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('.pagination .page-link').on('click', function () {
+                $('.pagination .page-item').removeClass('active');
+                $(this).parent('.page-item').addClass('active');
+            });
+        });
+    </script>
+}
+<!--ajax end-->
+

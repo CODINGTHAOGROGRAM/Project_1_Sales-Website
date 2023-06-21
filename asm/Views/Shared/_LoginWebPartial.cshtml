@@ -1,0 +1,71 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@using Microsoft.AspNetCore.Http
+@using asm.Constants
+@using asm.Models
+@{
+    string img = Context.Session.GetString(SessionKey.Employee.Img);
+    string Username = Context.Session.GetString(SessionKey.Employee.UserName);
+    string Email = Context.Session.GetString(SessionKey.Customer.CusEmail);
+    string ImgCus = Context.Session.GetString(SessionKey.Customer.Img);
+    string cart = Context.Session.GetString("cart");
+}
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4 px-lg-5 py-3 py-lg-0">
+    @if (Email != null && Email != "")
+    {
+        <a href="" class="navbar-brand p-0">
+            <h1 class="text-primary m-0"><i class="fa fa-utensils me-3"></i>TH FOODS</h1>
+            <!-- <img src="img/logo.png" alt="Logo"> -->
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+            <span class="fa fa-bars"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <div class="navbar-nav ms-auto py-0 pe-4">
+                <a asp-area="" asp-controller="Home" asp-action="Index" class="nav-item nav-link active">Trang chủ</a>
+                <a asp-area="" asp-controller="Food" asp-action="Menu" class="nav-item nav-link">Thực đơn</a>
+                <a asp-area="" asp-controller="Home" asp-action="Privacy" class="nav-item nav-link">Hỗ trợ</a>
+                <a href="contact.html" class="nav-item nav-link">Liên hệ</a>
+                <a asp-area="" asp-controller="Home" asp-action="Login" class="nav-item nav-link">
+                    @*<i class="fa-solid fa-user fa-xl"></i>*@
+                <img src="~/img/avatar/@img" alt="" style="border-radius: 50px; width: 30px; height: 30px;">
+                </a>
+                <a asp-area="" asp-controller="Food" asp-action="Cart" class="nav-item nav-link">
+                    <i class="fa-solid fa-cart-plus fa-xl"></i>
+                </a>
+                <a href="contact.html" class="nav-item nav-link">
+                    Đơn hàng
+                </a>
+            </div>
+            <a href="booking.html" class="btn btn-primary py-2 px-4">ĐẶT BÀN</a>
+        </div>
+    }
+    else
+    {
+        <a href="" class="navbar-brand p-0">
+            <h1 class="text-primary m-0"><i class="fa fa-utensils me-3"></i>TH FOODS</h1>
+            <!-- <img src="img/logo.png" alt="Logo"> -->
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+            <span class="fa fa-bars"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <div class="navbar-nav ms-auto py-0 pe-4">
+                <a asp-area="" asp-controller="Home" asp-action="Index" class="nav-item nav-link active">Trang chủ</a>
+                <a asp-area="" asp-controller="Food" asp-action="Menu" class="nav-item nav-link">Thực đơn</a>
+                <a asp-area="" asp-controller="Home" asp-action="Privacy" class="nav-item nav-link">Hỗ trợ</a>
+                <a href="contact.html" class="nav-item nav-link">Liên hệ</a>
+                <a asp-area="" asp-controller="Admin" asp-action="Login" class="nav-item nav-link">
+                    <i class="fa-solid fa-user fa-xl"></i>
+                    @* <img class="flex-shrink-0 img-fluid rounded" src="~/img/avatar/@img" alt="">*@
+                </a>
+                <a href="contact.html" class="nav-item nav-link">
+                    <i class="fa-solid fa-cart-plus fa-xl"></i>
+                </a>
+            </div>
+            <a href="booking.html" class="btn btn-primary py-2 px-4">ĐẶT BÀN</a>
+        </div>
+    }
+
+</nav>
